@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="../Images/logo.jpg" type="image/png" />
+  </head>
+
+  <body
+    class="min-h-screen flex flex-col justify-center items-center bg-cover bg-center"
+    style="background-image: url('/Images/b4.jpg')"
+  >
+   
+
+    <h2 class="text-3xl font-bold text-gray-800">Register</h2>
+
+    <!-- Message Display -->
+    <div id="message" class="mt-4 text-lg font-medium"></div>
+
+    <form
+      id="registerForm"
+      class="mt-6 flex flex-col gap-4 p-6 shadow-lg rounded-lg"
+    >
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="Username"
+        class="border p-3 rounded-md w-80"
+      />
+      <input
+        type="text"
+        id="mobile"
+        name="mobile"
+        placeholder="Mobile Number"
+        class="border p-3 rounded-md w-80"
+      />
+      <button
+        type="submit"
+        class="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition duration-300"
+      >
+        Submit
+      </button>
+    </form>
+
+    <!-- JavaScript to Handle Registration -->
+    <script>
+      document
+        .getElementById("registerForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault(); // Prevent form submission
+
+          const username = document.getElementById("username").value;
+          const mobile = document.getElementById("mobile").value;
+          const messageDiv = document.getElementById("message");
+
+          // Clear previous messages
+          messageDiv.innerHTML = "";
+
+          try {
+            const response = await fetch("/api/v1/users/register", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, mobile }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+              // Show error message in red
+              messageDiv.innerHTML = `<p class="text-black font-bold text-lg">${data.message}</p>`;
+            } else {
+              // Show success message in green
+              messageDiv.innerHTML = `<p class="text-green-500">🎉 Congratulations! You have registered successfully.</p>`;
+
+              // Redirect to token generation page after 2 seconds
+              setTimeout(() => {
+                window.location.href = "/api/v1/genratetoken/generate";
+              }, 2000);
+            }
+          } catch (error) {
+            messageDiv.innerHTML = `<p class="text-black font-bold text-lg">Something went wrong. Please try again.</p>`;
+          }
+        });
+    </script>
+  </body>
+</html>

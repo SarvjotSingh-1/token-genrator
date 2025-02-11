@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Generate Token</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="../Images/logo.jpg" type="image/png" />
+  </head>
+  <body
+    class="min-h-screen flex flex-col justify-center items-center bg-cover bg-center relative"
+    style="background-image: url('/Images/b3.png')"
+  >
+    <!-- <div class="absolute inset-0 bg-black bg-opacity-60"></div> -->
+    <!-- Page Title -->
+    <!-- <h2 class="text-3xl font-bold bg-gradient-to-r from-black via-gray-100 to-gray-400 bg-clip-text text-transparent"> -->
+      <h2 class=" font-bold text-black text-7xl">
+      Generate Your Food Token
+  </h2>
+  
+  
+    <!-- Error & Success Messages -->
+    <div id="message" class="mt-4 text-lg font-medium"></div>
+
+    <!-- Token Generation Form -->
+    <form
+      id="tokenForm"
+      class="mt-6 flex flex-col gap-4 p-6 shadow-lg rounded-lg"
+    >
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="Username"
+        class="border p-3 rounded-md w-80"
+      />
+      <input
+        type="text"
+        id="mobile"
+        name="mobile"
+        placeholder="Mobile Number"
+        class="border p-3 rounded-md w-80"
+      />
+      <button
+        type="submit"
+        class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300"
+      >
+        Get Token
+      </button>
+    </form>
+
+    <!-- JavaScript to Handle Form Submission -->
+    <script>
+      document
+        .getElementById("tokenForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const username = document.getElementById("username").value.trim();
+          const mobile = document.getElementById("mobile").value.trim();
+          const messageDiv = document.getElementById("message");
+
+          messageDiv.innerHTML = ""; // Clear previous messages
+
+          if (!username || !mobile) {
+            messageDiv.innerHTML = `<p class=" text-red-500 font-bold text-2xl ">Please enter both username and mobile number.</p>`;
+            return;
+          }
+
+          try {
+            const response = await fetch("/api/v1/genratetoken/generate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ username, mobile }),
+            });
+
+            const data = await response.json();
+            console.log("📩 API Response:", data); // Debugging
+
+            if (!response.ok) {
+              if (data.error?.includes("User not found")) {
+                messageDiv.innerHTML = `<p class=" text-red-500 font-bold text-2xl">User not found. Please <a href="/api/v1/register">register</a> first.</p>`;
+                return;
+              } else {
+                messageDiv.innerHTML = `<p class=" text-red-500 font-bold text-2xl">${
+                  data.error || "An error occurred."
+                }</p>`;
+              }
+            } else {
+              if (data.token) {
+                messageDiv.innerHTML = `<p class=" text-black font-bold text-2xl">Your token number is: <strong>${data.token}</strong></p>`;
+              } else {
+                messageDiv.innerHTML = `<p class="text-white-500">Unexpected error: Token not returned.</p>`;
+              }
+            }
+          } catch (error) {
+            console.error("💥 Fetch Error:", error);
+            messageDiv.innerHTML = `<p class="text-white-500">Something went wrong. Please try again.</p>`;
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Tokens</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900 min-h-screen flex flex-col items-center py-10">
+    <h1 class="text-4xl font-bold text-white mb-6">All Issued Tokens</h1>
+
+    <div id="message" class="text-lg text-red-400 font-semibold mb-4"></div>
+
+    <!-- Table Container -->
+    <div class="w-full max-w-5xl overflow-x-auto">
+      <table class="w-full bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-white">
+          <tr>
+            <th class="p-4 text-left text-lg">Token Number</th>
+            <th class="p-4 text-left text-lg">Name</th>
+            <th class="p-4 text-left text-lg">Mobile Number</th>
+            <th class="p-4 text-left text-lg">Date</th>
+          </tr>
+        </thead>
+        <tbody id="tokensList" class="divide-y divide-gray-600 bg-gray-800">
+          <!-- Tokens will be dynamically populated here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Go Back Button -->
+    <a
+      href="/home"
+      class="mt-6 bg-gray-700 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-600 transition-all duration-300"
+    >
+      🔙 Go Back
+    </a>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const tokensList = document.getElementById("tokensList");
+        const messageDiv = document.getElementById("message");
+
+        try {
+          // Fetch all tokens from the backend
+          const response = await fetch("/api/v1/alltokens/gettokens");
+          const data = await response.json();
+
+          if (!response.ok) {
+            messageDiv.innerHTML = `<p class="text-red-400">${
+              data.error || "An error occurred."
+            }</p>`;
+            return;
+          }
+
+          // Display tokens
+          if (data.tokens.length === 0) {
+            tokensList.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400">No tokens found.</td></tr>`;
+          } else {
+            data.tokens.forEach((token, index) => {
+              const row = document.createElement("tr");
+              row.classList.add(
+                index % 2 === 0 ? "bg-gray-700" : "bg-gray-800",
+                "hover:bg-gray-600",
+                "transition-all"
+              );
+
+              // Format date properly
+              const formattedDate = token.date
+                ? new Date(token.date).toLocaleDateString()
+                : "N/A";
+
+              row.innerHTML = `
+                <td class="p-4 text-lg font-semibold text-white">${
+                  token.token
+                }</td>
+                <td class="p-4 text-gray-300 font-medium">${
+                  token.name || "N/A"
+                }</td>
+                <td class="p-4 text-gray-400 font-medium">📞 ${
+                  token.mobile
+                }</td>
+                <td class="p-4 text-gray-400 font-medium">${formattedDate}</td>
+              `;
+              tokensList.appendChild(row);
+            });
+          }
+        } catch (error) {
+          console.error("💥 Fetch Error:", error);
+          messageDiv.innerHTML = `<p class="text-red-400">Something went wrong. Please try again.</p>`;
+        }
+      });
+    </script>
+  </body>
+</html>
