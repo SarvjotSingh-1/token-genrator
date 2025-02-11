@@ -6,20 +6,22 @@
     <title>All Tokens</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="bg-gray-900 min-h-screen flex flex-col items-center py-10">
-    <h1 class="text-4xl font-bold text-white mb-6">All Issued Tokens</h1>
+  <body class="bg-gray-900 min-h-screen flex flex-col items-center py-6 px-4">
+    <h1 class="text-2xl sm:text-4xl font-bold text-white mb-4 text-center">
+      All Issued Tokens
+    </h1>
 
     <div id="message" class="text-lg text-red-400 font-semibold mb-4"></div>
 
     <!-- Table Container -->
     <div class="w-full max-w-5xl overflow-x-auto">
-      <table class="w-full bg-gray-800 shadow-lg rounded-lg overflow-hidden">
+      <table class="w-full bg-gray-800 shadow-lg rounded-lg overflow-hidden min-w-[600px]">
         <thead class="bg-gray-700 text-white">
           <tr>
-            <th class="p-4 text-left text-lg">Token Number</th>
-            <th class="p-4 text-left text-lg">Name</th>
-            <th class="p-4 text-left text-lg">Mobile Number</th>
-            <th class="p-4 text-left text-lg">Date</th>
+            <th class="p-3 sm:p-4 text-left text-sm sm:text-lg">Token</th>
+            <th class="p-3 sm:p-4 text-left text-sm sm:text-lg">Name</th>
+            <th class="p-3 sm:p-4 text-left text-sm sm:text-lg">Mobile</th>
+            <th class="p-3 sm:p-4 text-left text-sm sm:text-lg">Date</th>
           </tr>
         </thead>
         <tbody id="tokensList" class="divide-y divide-gray-600 bg-gray-800">
@@ -31,7 +33,7 @@
     <!-- Go Back Button -->
     <a
       href="/"
-      class="mt-6 bg-gray-700 text-white px-6 py-3 rounded-lg shadow-md hover:bg-gray-600 transition-all duration-300"
+      class="mt-6 bg-gray-700 text-white px-5 py-2 sm:px-6 sm:py-3 rounded-lg shadow-md hover:bg-gray-600 transition-all duration-300 text-sm sm:text-base"
     >
       🔙 Go Back
     </a>
@@ -71,16 +73,16 @@
                 : "N/A";
 
               row.innerHTML = `
-                <td class="p-4 text-lg font-semibold text-white">${
+                <td class="p-3 sm:p-4 text-sm sm:text-lg font-semibold text-white">${
                   token.token
                 }</td>
-                <td class="p-4 text-gray-300 font-medium">${
+                <td class="p-3 sm:p-4 text-sm sm:text-lg text-gray-300 font-medium">${
                   token.name || "N/A"
                 }</td>
-                <td class="p-4 text-gray-400 font-medium">📞 ${
+                <td class="p-3 sm:p-4 text-sm sm:text-lg text-gray-400 font-medium">📞 ${
                   token.mobile
                 }</td>
-                <td class="p-4 text-gray-400 font-medium">${formattedDate}</td>
+                <td class="p-3 sm:p-4 text-sm sm:text-lg text-gray-400 font-medium">${formattedDate}</td>
               `;
               tokensList.appendChild(row);
             });

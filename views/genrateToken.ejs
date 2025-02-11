@@ -4,44 +4,42 @@
     <title>Generate Token</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="../Images/logo.jpg" type="image/png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body
-    class="min-h-screen flex flex-col justify-center items-center bg-cover bg-center relative"
+    class="min-h-screen flex flex-col justify-center items-center bg-cover bg-center relative px-4"
     style="background-image: url('/Images/b3.png')"
   >
-    <!-- <div class="absolute inset-0 bg-black bg-opacity-60"></div> -->
     <!-- Page Title -->
-    <!-- <h2 class="text-3xl font-bold bg-gradient-to-r from-black via-gray-100 to-gray-400 bg-clip-text text-transparent"> -->
-      <h2 class=" font-bold text-black text-7xl">
+    <h2 class="font-bold text-black text-3xl sm:text-5xl md:text-7xl text-center mt-10">
       Generate Your Food Token
-  </h2>
-  
-  
+    </h2>
+
     <!-- Error & Success Messages -->
-    <div id="message" class="mt-4 text-lg font-medium"></div>
+    <div id="message" class="mt-4 text-lg font-medium text-center"></div>
 
     <!-- Token Generation Form -->
     <form
       id="tokenForm"
-      class="mt-6 flex flex-col gap-4 p-6 shadow-lg rounded-lg"
+      class="mt-6 flex flex-col gap-4 p-6 shadow-lg rounded-lg bg-white w-full max-w-sm sm:max-w-md"
     >
       <input
         type="text"
         id="username"
         name="username"
         placeholder="Username"
-        class="border p-3 rounded-md w-80"
+        class="border p-3 rounded-md w-full"
       />
       <input
         type="text"
         id="mobile"
         name="mobile"
         placeholder="Mobile Number"
-        class="border p-3 rounded-md w-80"
+        class="border p-3 rounded-md w-full"
       />
       <button
         type="submit"
-        class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300"
+        class="bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition duration-300 w-full"
       >
         Get Token
       </button>
@@ -61,7 +59,7 @@
           messageDiv.innerHTML = ""; // Clear previous messages
 
           if (!username || !mobile) {
-            messageDiv.innerHTML = `<p class=" text-red-500 font-bold text-2xl ">Please enter both username and mobile number.</p>`;
+            messageDiv.innerHTML = `<p class="text-red-500 font-bold text-lg sm:text-2xl">Please enter both username and mobile number.</p>`;
             return;
           }
 
@@ -77,23 +75,21 @@
 
             if (!response.ok) {
               if (data.error?.includes("User not found")) {
-                messageDiv.innerHTML = `<p class=" text-red-500 font-bold text-2xl">User not found. Please <a href="/api/v1/register">register</a> first.</p>`;
+                messageDiv.innerHTML = `<p class="text-red-500 font-bold text-lg sm:text-2xl">User not found. Please <a href="/api/v1/register" class="underline">register</a> first.</p>`;
                 return;
               } else {
-                messageDiv.innerHTML = `<p class=" text-red-500 font-bold text-2xl">${
-                  data.error || "An error occurred."
-                }</p>`;
+                messageDiv.innerHTML = `<p class="text-red-500 font-bold text-lg sm:text-2xl">${data.error || "An error occurred."}</p>`;
               }
             } else {
               if (data.token) {
-                messageDiv.innerHTML = `<p class=" text-black font-bold text-2xl">Your token number is: <strong>${data.token}</strong></p>`;
+                messageDiv.innerHTML = `<p class="text-white font-bold text-lg sm:text-2xl">Your token number is: <strong>${data.token}</strong></p>`;
               } else {
-                messageDiv.innerHTML = `<p class="text-white-500">Unexpected error: Token not returned.</p>`;
+                messageDiv.innerHTML = `<p class="text-red-500 font-bold">Unexpected error: Token not returned.</p>`;
               }
             }
           } catch (error) {
             console.error("💥 Fetch Error:", error);
-            messageDiv.innerHTML = `<p class="text-white-500">Something went wrong. Please try again.</p>`;
+            messageDiv.innerHTML = `<p class="text-red-500 font-bold">Something went wrong. Please try again.</p>`;
           }
         });
     </script>
