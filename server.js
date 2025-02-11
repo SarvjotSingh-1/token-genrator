@@ -34,6 +34,11 @@ import tokenRoutes from "./routes/tokenRoutes.js";
 import getTokenRoutes from "./routes/getTokenRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
 connectDB();
 
@@ -46,6 +51,7 @@ app.use(cors());
 app.use(express.static("public"));
 // Set EJS as the template engine
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(path.resolve(), "public")));
 
 // API Routes
@@ -55,7 +61,7 @@ app.use("/api/v1/alltokens", getTokenRoutes);
 app.use("/api/v1/admin", adminRoutes);
 
 // Frontend Routes
-app.get("/home", (req, res) => res.render("home", { title: "Food App" }));
+app.get("/", (req, res) => res.render("home", { title: "Food App" }));
 
 app.get("/api/v1/users/register", (req, res) =>
   res.render("register", { title: "Register" })
